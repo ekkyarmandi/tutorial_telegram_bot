@@ -1,5 +1,6 @@
 from decouple import config
 import logging
+import re
 from telegram import Update, InlineKeyboardButton, InlineKeyboardMarkup
 from telegram.ext import (
     Application,
@@ -62,7 +63,9 @@ def main() -> None:
 
     # Add greeting message handler
     application.add_handler(
-        MessageHandler(filters.Regex(r"^(?i)(hi|hai|halo|hallo)$"), handle_greetings)
+        MessageHandler(
+            filters.Regex(r"^(hi|hai|halo|hallo)$", re.IGNORECASE), handle_greetings
+        )
     )
 
     # Start the bot

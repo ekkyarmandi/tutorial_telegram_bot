@@ -61,11 +61,10 @@ def main() -> None:
     application.add_handler(CommandHandler("start", start))
     application.add_handler(CommandHandler("test", test))
 
-    # Add greeting message handler
+    # Add greeting message handler - compile pattern first
+    greeting_pattern = re.compile(r"^(hi|hai|halo|hallo)$", re.IGNORECASE)
     application.add_handler(
-        MessageHandler(
-            filters.Regex(r"^(hi|hai|halo|hallo)$", re.IGNORECASE), handle_greetings
-        )
+        MessageHandler(filters.Regex(greeting_pattern), handle_greetings)
     )
 
     # Start the bot

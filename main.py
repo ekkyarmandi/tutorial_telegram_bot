@@ -1,7 +1,13 @@
 from decouple import config
 import logging
 from telegram import Update, InlineKeyboardButton, InlineKeyboardMarkup
-from telegram.ext import Application, CommandHandler, ContextTypes
+from telegram.ext import (
+    Application,
+    CommandHandler,
+    ContextTypes,
+    MessageHandler,
+    filters,
+)
 
 # Enable logging
 logging.basicConfig(
@@ -39,6 +45,12 @@ async def test(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
     )
 
 
+async def handle_greetings(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
+    """Handle various greeting messages."""
+    user = update.effective_user
+    await update.message.reply_text(f"Hey {user.first_name}! pie lur? 😊")
+
+
 def main() -> None:
     """Start the bot."""
     # Create the Application
@@ -47,6 +59,11 @@ def main() -> None:
     # Add command handlers
     application.add_handler(CommandHandler("start", start))
     application.add_handler(CommandHandler("test", test))
+
+    # Add greeting message handler
+    application.add_handler(
+        MessageHandler(filters.Regex(r"^(?i)(hi|hai|halo|hallo)$"), handle_greetings)
+    )
 
     # Start the bot
     application.run_polling(allowed_updates=Update.ALL_TYPES)
